@@ -1,0 +1,86 @@
+name: Deep Dive Actuator Config
+config: package://midi_board/config/BCF2000.yaml
+adapters:
+  - type: midi_board.adapters.LighthouseAdapter
+    name: MyLighthouseAdapter
+controls:
+  button_toggle:
+    - identifier: 65
+      name: left/j0
+      description: 'left/j0 clear faults'
+      signals:
+        on_change: [MyLighthouseAdapter.clear_faults, this_button.update_qt_button]
+        on_clicked: MyLighthouseAdapter.clear_faults
+    - identifier: 68
+      name: left/j1
+      description: 'left/j1 clear faults'
+      signals:
+        on_change: [MyLighthouseAdapter.clear_faults, this_button.update_qt_button]
+        on_clicked: MyLighthouseAdapter.clear_faults
+  slider:
+    - identifier: 81
+      name: left/j0/position
+      description: 'left/j0 position'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_slider_changed_value: MyLighthouseAdapter.send_position
+        on_val_set_return_pressed: MyLighthouseAdapter.send_position
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 82
+      name: left/j0/velocity
+      description: 'left/j0 velocity'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_slider_changed_value: MyLighthouseAdapter.send_velocity
+        on_val_set_return_pressed: MyLighthouseAdapter.send_velocity
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 83
+      name: left/j0/effort
+      description: 'left/j0 effort'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_slider_changed_value: MyLighthouseAdapter.send_effort
+        on_val_set_return_pressed: MyLighthouseAdapter.send_effort
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 84
+      name: left/j1/position
+      description: 'left/j1 position'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_slider_changed_value: MyLighthouseAdapter.send_position
+        on_val_set_return_pressed: MyLighthouseAdapter.send_position
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 85
+      name: left/j1/velocity
+      description: 'left/j1 velocity'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_slider_changed_value: MyLighthouseAdapter.send_velocity
+        on_val_set_return_pressed: MyLighthouseAdapter.send_velocity
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 86
+      name: left/j1/effort
+      description: 'left/j1 effort'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_slider_changed_value: MyLighthouseAdapter.send_effort
+        on_val_set_return_pressed: MyLighthouseAdapter.send_effort
+        on_range_edited: this_slider.update_qt_slider
+  default_value_button:
+    - identifier: 200
+      name: set_default_button
+      type: midi_board.controls.SetDefaultButton
+      signals:
+        on_clicked: [this_button.update_qt_controls_default, MyLighthouseAdapter.send_defaults]

@@ -1,0 +1,109 @@
+name: UR10 Config
+config: package://midi_board/config/BCF2000.yaml
+adapters:
+  - type: midi_board.adapters.JointStateHandler
+    name: MyJointStateHandler
+    topic: /move_group/fake_controller_joint_states
+    message_type: sensor_msgs.msg.JointState
+    sub_topic: /joint_states
+    sub_message_type: sensor_msgs.msg.JointState
+    queue_size: 10
+controls:
+  slider:
+    - identifier: 81
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: elbow_joint
+      description: 'elbow_joint'
+      signals:
+        on_slider_changed_value: MyJointStateHandler.send_elbow_joint_state
+        on_val_set_return_pressed: MyJointStateHandler.send_elbow_joint_state
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 82
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: shoulder_lift_joint
+      description: 'shoulder_lift_joint'
+      signals:
+        on_slider_changed_value: MyJointStateHandler.send_shoulder_lift_joint_state
+        on_val_set_return_pressed: MyJointStateHandler.send_shoulder_lift_joint_state
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 83
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 1
+      name: shoulder_pan_joint
+      description: 'shoulder_pan_joint'
+      signals:
+        on_slider_changed_value: MyJointStateHandler.send_shoulder_pan_joint_state
+        on_val_set_return_pressed: MyJointStateHandler.send_shoulder_pan_joint_state
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 84
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: wrist_1_joint
+      description: 'wrist_1_joint'
+      signals:
+        on_slider_changed_value: MyJointStateHandler.send_wrist_1_joint_state
+        on_val_set_return_pressed: MyJointStateHandler.send_wrist_1_joint_state
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 85
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: wrist_2_joint
+      description: 'wrist_2_joint'
+      signals:
+        on_slider_changed_value: MyJointStateHandler.send_wrist_2_joint_state
+        on_val_set_return_pressed: MyJointStateHandler.send_wrist_2_joint_state
+        on_range_edited: this_slider.update_qt_slider
+    - identifier: 86
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: wrist_3_joint
+      description: 'wrist_3_joint'
+      signals:
+        on_slider_changed_value: MyJointStateHandler.send_wrist_3_joint_state
+        on_val_set_return_pressed: MyJointStateHandler.send_wrist_3_joint_state
+        on_range_edited: this_slider.update_qt_slider
+  default_value_button:
+    - identifier: 200
+      name: set_default_button
+      type: midi_board.controls.SetDefaultButton
+      signals:
+        on_clicked: [this_button.update_qt_controls_default, MyJointStateHandler.send_default_states]
+  view:
+    - identifier: 100
+      name: elbow_joint
+      type: midi_board.controls.View
+      signals:
+         on_timed_event: MyJointStateHandler.get_param_value
+    - identifier: 101
+      name: shoulder_lift_joint
+      type: midi_board.controls.View
+      signals:
+       on_timed_event: MyJointStateHandler.get_param_value
+    - identifier: 102
+      name: shoulder_pan_joint
+      type: midi_board.controls.View
+      signals:
+       on_timed_event: MyJointStateHandler.get_param_value
+    - identifier: 103
+      name: wrist_1_joint
+      type: midi_board.controls.View
+      signals:
+       on_timed_event: MyJointStateHandler.get_param_value
+    - identifier: 104
+      name: wrist_2_joint
+      type: midi_board.controls.View
+      signals:
+       on_timed_event: MyJointStateHandler.get_param_value
+    - identifier: 105
+      name: wrist_3_joint
+      type: midi_board.controls.View
+      signals:
+       on_timed_event: MyJointStateHandler.get_param_value

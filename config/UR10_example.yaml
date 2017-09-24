@@ -1,0 +1,60 @@
+name: UR10 Config
+config: package://midi_board/config/BCF2000.yaml
+adapters:
+  - type: midi_board.adapters.JointStateHandler
+    name: MyJointStateHandler
+    topic: /move_group/fake_controller_joint_states
+    message_type: sensor_msgs.msg.JointState
+    sub_topic: /joint_states
+    sub_message_type: sensor_msgs.msg.JointState
+    queue_size: 10
+controls:
+  slider:
+    - identifier: 81
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: elbow_joint
+      description: 'elbow_joint'
+      signals:
+        on_change: MyJointStateHandler.send_elbow_joint_state
+    - identifier: 82
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: shoulder_lift_joint
+      description: 'shoulder_lift_joint'
+      signals:
+        on_change: MyJointStateHandler.send_shoulder_lift_joint_state
+    - identifier: 83
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 1
+      name: shoulder_pan_joint
+      description: 'shoulder_pan_joint'
+      signals:
+        on_change: MyJointStateHandler.send_shoulder_pan_joint_state
+    - identifier: 84
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: wrist_1_joint
+      description: 'wrist_1_joint'
+      signals:
+        on_change: MyJointStateHandler.send_wrist_1_joint_state
+    - identifier: 85
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: wrist_2_joint
+      description: 'wrist_2_joint'
+      signals:
+        on_change: MyJointStateHandler.send_wrist_2_joint_state
+    - identifier: 86
+      min_value: -3.14
+      max_value: 3.14
+      default_value: 2
+      name: wrist_3_joint
+      description: 'wrist_3_joint'
+      signals:
+        on_change: MyJointStateHandler.send_wrist_3_joint_state

@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+"""A MIDI program."""
+
+import argparse
+from logging import DEBUG
+
+import rospy
+from midi_board.board import MidiBoard
+from midi_board.custom_logging import LOGGER
+import time
+import signal
+
+
+# CONFIG_FILE = 'package://midi_board/config/UR10_example.yaml'
+CONFIG_FILE = 'package://midi_board/config/deep_dive_actuator_example.yaml'
+
+interrupted = False
+
+
+def setup(default_config_file=CONFIG_FILE):
+    """Parse the args and setup."""
+
+    parser = argparse.ArgumentParser(usage='Load a MIDI controller')
+    parser.add_argument('--config_file', '-c', type=str, default=default_config_file, help='User config file to load.')
+    parser.add_argument('--interactive', '-i', help="interactive mode", action="store_true")
+    parser.add_argument('--verbose', '-v', help="increase output verbosity", action="store_true")
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    """Run the midi script."""
+    config_file = rospy.get_param('~config', CONFIG_FILE)
+
+    args = setup(config_file)
+
+    if args.verbose:
+        LOGGER.setLevel(DEBUG)
+
+    midi = MidiBoard(args.config_file)
+    LOGGER.debug(midi)
+
+    # rospy.on_shutdown(midi.finalize)
+
+    if args.interactive:
+        from IPython import embed
+        embed()
+
+    # rospy.spin()
+
+    signal.signal(signal.SIGINT, sigint_handler)
+
+    global interrupted  # gross.. but this works for multiple protocol. Recommend to use rospy.spin() when using ROS.
+    while not interrupted:
+        time.sleep(0.01)  # perhaps this freq is good for ROS as well (?)
+
+    midi.finalize()
+
+
+def sigint_handler(*args):
+    """Handler for the SIGINT signal."""
+    global interrupted  # gross
+    interrupted = True
+
+
+if __name__ == '__main__':
+    main()

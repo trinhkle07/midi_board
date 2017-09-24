@@ -1,0 +1,1 @@
+"""Virtualized MIDI board control."""

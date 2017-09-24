@@ -1,0 +1,33 @@
+name: My Example Config
+config: package://midi_board/config/BCF2000.yaml
+adapters:
+  - type: midi_board.adapters.DebugAdapter
+    name: MyLogAdapter
+controls:
+  encoder:
+    - identifier: 1
+      name: MyEncoder1
+      description: 'An example encoder.'
+      signals:
+        pressed: MyLogAdapter.on_event
+        on_change: MyLogAdapter.on_event
+  button:
+    - identifier: 33
+      name: MyPushButton
+      description: 'Just push my buttons.'
+      signals:
+        pressed: MyLogAdapter.on_event
+  button_toggle:
+    - identifier: 65
+      name: MyToggleButton
+      description: 'Make a light go ON or OFF.'
+      signals:
+        toggle: MyLogAdapter.on_event
+  slider:
+    - identifier: 81
+      name: MySlider
+      description: 'A motorized slider for fading.'
+      signals:
+        on_change:
+          - MyLogAdapter.on_event
+          - MyLogAdapter.warning

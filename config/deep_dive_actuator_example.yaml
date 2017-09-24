@@ -1,0 +1,66 @@
+name: Deep Dive Actuator Config
+config: package://midi_board/config/BCF2000.yaml
+adapters:
+  - type: midi_board.adapters.LighthouseAdapter
+    name: MyLighthouseAdapter
+controls:
+  button_toggle:
+    - identifier: 65
+      name: left/j0
+      description: 'left/j0 clear faults'
+      signals:
+        on_change: MyLighthouseAdapter.clear_faults
+    - identifier: 68
+      name: left/j1
+      description: 'left/j1 clear faults'
+      signals:
+        on_change: MyLighthouseAdapter.clear_faults
+  slider:
+    - identifier: 81
+      name: left/j0
+      description: 'left/j0 position'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: MyLighthouseAdapter.send_position
+    - identifier: 82
+      name: left/j0
+      description: 'left/j0 velocity'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: MyLighthouseAdapter.send_velocity
+    - identifier: 83
+      name: left/j0
+      description: 'left/j0 effort'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: MyLighthouseAdapter.send_effort
+    - identifier: 84
+      name: left/j1
+      description: 'left/j1 position'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: MyLighthouseAdapter.send_position
+    - identifier: 85
+      name: left/j1
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      description: 'left/j1 velocity'
+      signals:
+        on_change: MyLighthouseAdapter.send_velocity
+    - identifier: 86
+      name: left/j1
+      description: 'left/j1 effort'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: MyLighthouseAdapter.send_effort

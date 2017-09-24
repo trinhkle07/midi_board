@@ -1,0 +1,115 @@
+image: docker.hmech.us:5000/ci/kinetic-ros:latest # Base CI ros kinetic docker
+
+variables: # Define any variables. These will be available to all jobs/stages
+  BUILD_WS: "package_ws" # Just a variable for the name of the workspace where the repo will live
+  GIT_STRATEGY: none # Telling gitlab to let not try to do any workspace setup, we'll do it
+  REPOS_FILE_REPO: git@code.hmech.us:EEZO/eezo_repos.git
+  REPOS_REPO_NAME: eezo_repos
+  REPOS_FILE: eezo_extended.repos # Most projects just need eezo_full.repos and not the extended version
+  CI_SCRIPTS_REPO: git@code.hmech.us:HMICI/ci_scripts.git
+
+# Stages are executed linearly, one after another. Multiple jobs belonging to the same stage will be done in parallel
+stages:
+- prep
+- build_test_stage
+- post_processing
+- pages
+
+before_script: # This will happen before every job but AFTER the restoration of artifacts. See https://docs.gitlab.com/ce/ci/yaml/README.html#before_script
+  - apt-get update -qq
+  - apt-get upgrade -y
+  - rosdep update
+  - export DEPS_WS=$CI_PROJECT_DIR/deps_ws
+  - export PKG_WS=$CI_PROJECT_DIR/$BUILD_WS
+
+prep: # This is a JOB
+  stage: prep # This job belongs to the prep STAGE
+  script: # These are just command line calls to be executed in the docker image from above
+    - git clone $CI_SCRIPTS_REPO
+    - git clone $REPOS_FILE_REPO
+    - cd $REPOS_REPO_NAME && git checkout master
+    - echo -en "$(git checkout $CI_COMMIT_REF_NAME)" || true # If the branch being built doesn't exist, stay on master
+    - cd .. && mkdir -p $DEPS_WS/src
+    - cd $CI_PROJECT_DIR/deps_ws && catkin config --install --extend /opt/ros/$ROS_DISTRO
+    - vcs import --input $CI_PROJECT_DIR/$REPOS_REPO_NAME/$REPOS_FILE $DEPS_WS/src
+    - cd $DEPS_WS/src && vcs custom --args checkout master
+    - echo -en "$(vcs custom --args checkout `$CI_PROJECT_DIR/ci_scripts/ciscripts/utils/git.py --base-branch $CI_COMMIT_REF_NAME`)" || true
+    - echo -en "$(vcs custom --args checkout $CI_COMMIT_REF_NAME)" || true
+    - cd .. && rosdep install --from-paths src -i -y --as-root apt:false --as-root pip:false
+    - catkin build $CI_PROJECT_NAME
+  artifacts: # If we don't make the package workspace an artifact, in the following stages it won't be there
+    paths:
+      - deps_ws/
+    expire_in: 1 day # We only need the package_ws to be there for the following stages, so we don't care if it's gone after the build finishes
+    when: always
+
+build_and_test: # This is a JOB
+  stage: build_test_stage # The JOB build_and_test belongs to the STAGE build_test_stage
+  dependencies:
+    - prep
+  script:
+    - source $DEPS_WS/install/setup.bash
+    - rosdep install --from-paths $DEPS_WS/src -i -y --as-root apt:false --as-root pip:false
+    - mkdir -p $PKG_WS/src # make package ws
+    - cd $PKG_WS && catkin config --extend $DEPS_WS/install --install
+    - cd src && git clone $CI_REPOSITORY_URL
+    - cd $CI_PROJECT_NAME && git checkout master
+    - git checkout $CI_BUILD_REF_NAME
+    - cd ../..
+    - rosdep install --from-paths src -i -y --as-root apt:false --as-root pip:false
+    - catkin build $CI_PROJECT_NAME
+    - source install/setup.bash
+    - catkin run_tests --no-deps $CI_PROJECT_NAME
+    - catkin test --no-deps $CI_PROJECT_NAME
+  artifacts:
+    paths:
+      - $BUILD_WS/
+      - $BUILD_WS/build/$CI_PROJECT_NAME/static_analysis
+    expire_in: 1 day
+    when: always
+
+coverage: # This is a JOB
+  stage: post_processing #Since this JOB belongs to the build_test_stage STAGE, it'll run in parallel to the other jobs from that stage
+  dependencies:
+    - prep
+    - build_and_test
+  script:
+    - source $PKG_WS/install/setup.bash
+    - cd $PKG_WS
+    - rosdep install --from-paths $DEPS_WS/src -i -y --as-root apt:false --as-root pip:false
+    - catkin build --no-deps $CI_PROJECT_NAME -DCMAKE_BUILD_TYPE=Coverage --make-args run_coverage_$CI_PROJECT_NAME
+    - gcovr -r .
+    - mv build/$CI_PROJECT_NAME/coverage $CI_PROJECT_DIR
+  artifacts: # If we don't make the package workspace an artifact, in the following stages it won't be there
+    paths:
+      - $CI_PROJECT_DIR/coverage
+    when: always
+
+# documentation:
+#   stage: post_processing
+#   dependencies:
+#     - prep
+#     - build_and_test
+#   script:
+#     - cd $PKG_WS/src/$CI_PROJECT_NAME && doxygen Doxyfile
+#     - mv doxygen/ $CI_PROJECT_DIR
+#   artifacts:
+#     paths:
+#       - $CI_PROJECT_DIR/doxygen
+
+pages: # This is a special job. For more info go here: https://docs.gitlab.com/ee/user/project/pages/getting_started_part_four.html
+  stage: pages
+  dependencies:
+    # - coverage
+    # - documentation
+    - prep
+    - build_and_test
+  script:
+    - mkdir public # public/ is a special directory where GitLab will look for static websites to host as pages
+    # - mv $CI_PROJECT_DIR/coverage/ public/$CI_PROJECT_NAME_coverage
+    - mv $CI_PROJECT_DIR/doxygen public/$CI_PROJECT_DIR_coverage
+  artifacts:
+    paths:
+      - public/
+  only:
+    - master # Only run the pages job when building the master branch

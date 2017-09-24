@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+"""A MIDI program."""
+
+import argparse
+import signal
+import sys
+from logging import DEBUG
+
+import rospy
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from midi_board.board import MidiBoard
+from midi_board.controls import View
+from midi_board.custom_logging import LOGGER
+from midi_board.midi_dialog import MidiDialog
+
+# CONFIG_FILE = 'package://midi_board/config/UR10_example_board_virtual.yaml'
+CONFIG_FILE = 'package://midi_board/config/deep_dive_actuator_example_board_virtual.yaml'
+
+
+def setup(default_config_file=CONFIG_FILE):
+    """Parse the args and setup."""
+    parser = argparse.ArgumentParser(usage='Load a MIDI controller')
+    parser.add_argument('--config_file', '-c', type=str, default=default_config_file, help='User config file to load.')
+    parser.add_argument('--interactive', '-i', help="interactive mode", action="store_true")
+    parser.add_argument('--verbose', '-v', help="increase output verbosity", action="store_true")
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    """Run the midi script."""
+    config_file = rospy.get_param('~config', CONFIG_FILE)
+
+    args = setup(config_file)
+
+    if args.verbose:
+        LOGGER.setLevel(DEBUG)
+
+    midi = MidiBoard(args.config_file)
+    LOGGER.debug(midi)
+
+    app = QApplication(sys.argv)
+    my_dialog = MidiDialog(midi)
+    view_timer = QTimer()
+
+    views = midi.get_controls(control_type=View)
+
+    for view in views:
+        view_timer.timeout.connect(view.on_timed_event)
+    view_timer.start(100)
+
+    status_timer = QTimer()
+    status_timer.timeout.connect(my_dialog.update_board_connection_status)
+    status_timer.start(1000)
+
+    signal.signal(signal.SIGINT, lambda self, *arg: app.quit())
+
+    if args.interactive:
+        from IPython import embed
+        embed()
+
+    my_dialog.show()
+
+    ret_code = app.exec_()
+    if ret_code == QDialog.Rejected:
+        view_timer.stop()
+        status_timer.stop()
+        midi.finalize()
+
+
+if __name__ == '__main__':
+    main()

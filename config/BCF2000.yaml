@@ -1,0 +1,208 @@
+serial: BCF2000
+controls:
+  types:
+    - name: encoder
+      type: midi_board.controls.EncoderButton
+      min_value: 0
+      max_value: 127
+    - name: slider
+      type: midi_board.controls.Slider
+      min_value: 0
+      max_value: 127
+    - name: button
+      type: midi_board.controls.Button
+    - name: button_toggle
+      type: midi_board.controls.ButtonToggle
+      default_state: midi_board.controls.Button.State.OFF
+  encoder:
+    - name: encoder_1_1
+      identifier: 1
+    - name: encoder_1_2
+      identifier: 2
+    - name: encoder_1_3
+      identifier: 3
+    - name: encoder_1_4
+      identifier: 4
+    - name: encoder_1_5
+      identifier: 5
+    - name: encoder_1_6
+      identifier: 6
+    - name: encoder_1_7
+      identifier: 7
+    - name: encoder_1_8
+      identifier: 8
+    - name: encoder_2_1
+      identifier: 9
+    - name: encoder_2_2
+      identifier: 10
+    - name: encoder_2_3
+      identifier: 11
+    - name: encoder_2_4
+      identifier: 12
+    - name: encoder_2_5
+      identifier: 13
+    - name: encoder_2_6
+      identifier: 14
+    - name: encoder_2_7
+      identifier: 15
+    - name: encoder_2_8
+      identifier: 16
+    - name: encoder_3_1
+      identifier: 17
+    - name: encoder_3_2
+      identifier: 18
+    - name: encoder_3_3
+      identifier: 19
+    - name: encoder_3_4
+      identifier: 20
+    - name: encoder_3_5
+      identifier: 21
+    - name: encoder_3_6
+      identifier: 22
+    - name: encoder_3_7
+      identifier: 23
+    - name: encoder_3_8
+      identifier: 24
+    - name: encoder_4_1
+      identifier: 25
+    - name: encoder_4_2
+      identifier: 26
+    - name: encoder_4_3
+      identifier: 27
+    - name: encoder_4_4
+      identifier: 28
+    - name: encoder_4_5
+      identifier: 29
+    - name: encoder_4_6
+      identifier: 30
+    - name: encoder_4_7
+      identifier: 31
+    - name: encoder_4_8
+      identifier: 32
+  button:
+    - name: encoder_push_1_1
+      identifier: 33
+    - name: encoder_push_1_2
+      identifier: 34
+    - name: encoder_push_1_3
+      identifier: 35
+    - name: encoder_push_1_4
+      identifier: 36
+    - name: encoder_push_1_5
+      identifier: 37
+    - name: encoder_push_1_6
+      identifier: 38
+    - name: encoder_push_1_7
+      identifier: 39
+    - name: encoder_push_1_8
+      identifier: 40
+    - name: encoder_push_2_1
+      identifier: 41
+    - name: encoder_push_2_2
+      identifier: 42
+    - name: encoder_push_2_3
+      identifier: 43
+    - name: encoder_push_2_4
+      identifier: 44
+    - name: encoder_push_2_5
+      identifier: 45
+    - name: encoder_push_2_6
+      identifier: 46
+    - name: encoder_push_2_7
+      identifier: 47
+    - name: encoder_push_2_8
+      identifier: 48
+    - name: encoder_push_3_1
+      identifier: 49
+    - name: encoder_push_3_2
+      identifier: 50
+    - name: encoder_push_3_3
+      identifier: 51
+    - name: encoder_push_3_4
+      identifier: 52
+    - name: encoder_push_3_5
+      identifier: 53
+    - name: encoder_push_3_6
+      identifier: 54
+    - name: encoder_push_3_7
+      identifier: 55
+    - name: encoder_push_3_8
+      identifier: 56
+    - name: encoder_push_4_1
+      identifier: 57
+    - name: encoder_push_4_2
+      identifier: 58
+    - name: encoder_push_4_3
+      identifier: 59
+    - name: encoder_push_4_4
+      identifier: 60
+    - name: encoder_push_4_5
+      identifier: 61
+    - name: encoder_push_4_6
+      identifier: 62
+    - name: encoder_push_4_7
+      identifier: 63
+    - name: encoder_push_4_8
+      identifier: 64
+    - name: generic_push_1_1
+      identifier: 89
+    - name: generic_push_1_2
+      identifier: 90
+    - name: generic_push_2_1
+      identifier: 91
+    - name: generic_push_2_2
+      identifier: 92
+    - name: aux_1
+      identifier: 93
+    - name: aux_2
+      identifier: 94
+  button_toggle:
+    - name: generic_toggle_1_1
+      identifier: 65
+    - name: generic_toggle_1_2
+      identifier: 66
+    - name: generic_toggle_1_3
+      identifier: 67
+    - name: generic_toggle_1_4
+      identifier: 68
+    - name: generic_toggle_1_5
+      identifier: 69
+    - name: generic_toggle_1_6
+      identifier: 70
+    - name: generic_toggle_1_7
+      identifier: 71
+    - name: generic_toggle_1_8
+      identifier: 72
+    - name: generic_toggle_2_1
+      identifier: 73
+    - name: generic_toggle_2_2
+      identifier: 74
+    - name: generic_toggle_2_3
+      identifier: 75
+    - name: generic_toggle_2_4
+      identifier: 76
+    - name: generic_toggle_2_5
+      identifier: 77
+    - name: generic_toggle_2_6
+      identifier: 78
+    - name: generic_toggle_2_7
+      identifier: 79
+    - name: generic_toggle_2_8
+      identifier: 80
+  slider:
+    - name: slider_1
+      identifier: 81
+    - name: slider_2
+      identifier: 82
+    - name: slider_3
+      identifier: 83
+    - name: slider_4
+      identifier: 84
+    - name: slider_5
+      identifier: 85
+    - name: slider_6
+      identifier: 86
+    - name: slider_7
+      identifier: 87
+    - name: slider_8
+      identifier: 88

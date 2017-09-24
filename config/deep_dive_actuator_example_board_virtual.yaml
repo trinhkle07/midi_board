@@ -1,0 +1,92 @@
+name: Deep Dive Actuator Config
+config: package://midi_board/config/BCF2000.yaml
+adapters:
+  - type: midi_board.adapters.LighthouseAdapter
+    name: MyLighthouseAdapter
+controls:
+  button_toggle:
+    - identifier: 65
+      name: left/j0
+      description: 'left/j0 clear faults'
+      signals:
+        on_change: [MyLighthouseAdapter.clear_faults, this_button.update_qt_button]
+        on_clicked: [MyLighthouseAdapter.clear_faults, this_button.toggle_button]
+    - identifier: 68
+      name: left/j1
+      description: 'left/j1 clear faults'
+      signals:
+        on_change: [MyLighthouseAdapter.clear_faults, this_button.update_qt_button]
+        on_clicked: [MyLighthouseAdapter.clear_faults, this_button.toggle_button]
+  slider:
+    - identifier: 81
+      name: left/j0
+      description: 'left/j0 position'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: [MyLighthouseAdapter.send_position, this_slider.update_qt_slider]
+        on_slider_changed_value: [MyLighthouseAdapter.send_position, this_slider.move_slider]
+        on_val_set_return_pressed: [MyLighthouseAdapter.send_position, this_slider.move_slider]
+        on_range_edited: [this_slider.update_qt_slider, this_slider.move_slider]
+    - identifier: 82
+      name: left/j0
+      description: 'left/j0 velocity'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: [MyLighthouseAdapter.send_velocity, this_slider.update_qt_slider]
+        on_slider_changed_value: [MyLighthouseAdapter.send_velocity, this_slider.move_slider]
+        on_val_set_return_pressed: [MyLighthouseAdapter.send_velocity, this_slider.move_slider]
+        on_range_edited: [this_slider.update_qt_slider, this_slider.move_slider]
+    - identifier: 83
+      name: left/j0
+      description: 'left/j0 effort'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: [MyLighthouseAdapter.send_effort, this_slider.update_qt_slider]
+        on_slider_changed_value: [MyLighthouseAdapter.send_effort, this_slider.move_slider]
+        on_val_set_return_pressed: [MyLighthouseAdapter.send_effort, this_slider.move_slider]
+        on_range_edited: [this_slider.update_qt_slider, this_slider.move_slider]
+    - identifier: 84
+      name: left/j1
+      description: 'left/j1 position'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: [MyLighthouseAdapter.send_position, this_slider.update_qt_slider]
+        on_slider_changed_value: [MyLighthouseAdapter.send_position, this_slider.move_slider]
+        on_val_set_return_pressed: [MyLighthouseAdapter.send_position, this_slider.move_slider]
+        on_range_edited: [this_slider.update_qt_slider, this_slider.move_slider]
+    - identifier: 85
+      name: left/j1
+      description: 'left/j1 velocity'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: [MyLighthouseAdapter.send_velocity, this_slider.update_qt_slider]
+        on_slider_changed_value: [MyLighthouseAdapter.send_velocity, this_slider.move_slider]
+        on_val_set_return_pressed: [MyLighthouseAdapter.send_velocity, this_slider.move_slider]
+        on_range_edited: [this_slider.update_qt_slider, this_slider.move_slider]
+    - identifier: 86
+      name: left/j1
+      description: 'left/j1 effort'
+      min_value: 0
+      max_value: 0.5
+      default_value: 0
+      signals:
+        on_change: [MyLighthouseAdapter.send_effort, this_slider.update_qt_slider]
+        on_slider_changed_value: [MyLighthouseAdapter.send_effort, this_slider.move_slider]
+        on_val_set_return_pressed: [MyLighthouseAdapter.send_effort, this_slider.move_slider]
+        on_range_edited: [this_slider.update_qt_slider, this_slider.move_slider]
+  default_value_button:
+    - identifier: 200
+      name: set_default_button
+      type: midi_board.controls.SetDefaultButton
+      signals:
+        on_clicked: [this_button.update_qt_controls_default, MyLighthouseAdapter.clear_faults]
