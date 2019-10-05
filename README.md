@@ -48,6 +48,7 @@ To define and configure the functionality of MIDI device knobs, sliders and butt
 
 Demo of virtual MIDI controller interacting with UR10 Industrial Arm in RViz
 
-<video src="media/demo_virtual.mp4"></video>
+[![Watch the video](https://img.youtube.com/vi/rXH3AveKi_0/maxresdefault.jpg)](https://youtu.be/rXH3AveKi_0)
+
 ## License
 The MIT License.
